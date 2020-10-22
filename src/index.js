@@ -5,36 +5,52 @@ import menu from '../src/menu.json';
 
 const menuRef = document.querySelector('.js-menu');
 const markup = menuCardTpl(menu);
-const themeChenge = document.querySelector('#theme-switch-toggle');
-const valueSwitchToggle = document.querySelector('theme-switch__toggle');
-
 menuRef.insertAdjacentHTML('beforeend', markup);
+
+
+const themeChenge = document.querySelector('#theme-switch-toggle');
+const body = document.querySelector('body');
 
 themeChenge.addEventListener('change', onThemeChenge)
 
 
+
 function onThemeChenge(e) {
-    e.preventDefault();
-    addClassList()
-    console.log(valueSwitchToggle)
-    console.log(e)
-
+  e.preventDefault();
+  setClassList();
+  setLocalStorage();
 }
-
-function addClassList() {
-    document.querySelector('body').classList.add(Theme.LIGHT);
-    document.querySelector('body').classList.toggle(Theme.DARK);
-
-//   document.querySelector('body').classList.replace(Theme.LIGHT, Theme.DARK);
-}
-
-// console.log(themeChenge);
 
 const Theme = {
   LIGHT: "light-theme",
   DARK: "dark-theme",
 };
 
-console.log(Theme);
+function setClassList() {
+  const check = themeChenge.checked
+  if (check) {
+      body.classList.add(Theme.DARK);
+      body.classList.remove(Theme.LIGHT);
+    } else {
+      body.classList.add(Theme.LIGHT);
+      body.classList.remove(Theme.DARK);
+  }
+}
 
-console.dir(menuCardTpl);
+function setLocalStorage() {
+  const check = themeChenge.checked
+  if (check) {
+    localStorage.setItem('theme', Theme.DARK);
+  } 
+  else {
+    localStorage.removeItem('theme');
+    localStorage.setItem('theme', Theme.LIGHT);
+  }
+}
+
+const themeInLocal = localStorage.getItem('theme');
+
+if (themeInLocal === Theme.DARK) {
+  body.classList.add(Theme.DARK);
+  themeChenge.checked = true;
+}
